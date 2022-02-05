@@ -8,7 +8,7 @@ class Directory extends React.Component {
         super();
 
         this.state = {
-            collection:[
+            sections:[
  
                 {
                   title: 'hats',
