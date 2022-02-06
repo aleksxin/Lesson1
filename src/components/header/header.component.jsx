@@ -6,26 +6,35 @@ import './header.styles.scss';
 import { ReactComponent as Logo } from '../..//assets/crown.svg';
 import { auth } from "../../firebase/firebase.utils";
 import { updateCurrentUser } from "firebase/auth";
+import CartIcon from "../cart-icon/cart-icon.component";
 
-const Header=({currentUser})=>(
+import CartDropdown from "../cart-dropdown/cart-dropdown.component";
+
+
+const Header=({currentUser,hidden})=>(
     <div className='header'>
         <Link to="/">
             <Logo className='logo'/>
         </Link>
         <div className="options">
-            <Link className='option' to='/shop'>Shop</Link>
-            <Link className='option' to='/shop'>Contact</Link>
+            <Link className='option' to='/shop'>SHOP</Link>
+            <Link className='option' to='/shop'>CONTACT</Link>
             {
                     currentUser ?
                     <div className="option" onClick={() => auth.signOut()}>SIGN OUT</div>:
                     <Link className='option' to ='/signin'>SIGN IN</Link>
             }
-        </div>
+            <CartIcon/>
+           </div>
+           {
+                hidden ? null:        
+        <CartDropdown/>
+           }
     </div>
 )
 
-const mapStateToProps= (state) =>({
-    currentUser:state.user.currentUser
+const mapStateToProps= ({user: {currentUser},cart:{hidden}}) =>({
+    currentUser, hidden
 });
 
 export default connect(mapStateToProps)(Header);

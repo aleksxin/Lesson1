@@ -1,6 +1,7 @@
 
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
+
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 import HomePage from './pages/homepage/homepage.component';
 
@@ -26,7 +27,7 @@ class App extends React.Component {
       <Routes>
       <Route exact path='/' element={<HomePage/>}/>
       <Route path='/shop' element={<ShopPage/>}/>
-      <Route path='/signin' element={<SignInAndSignUpPage></SignInAndSignUpPage>}/>
+      <Route exact path='/signin' element={ this.props.currentUser?(<Navigate to='/' />):(<SignInAndSignUpPage/>)}/>
 
       </Routes>
     </div>
@@ -64,9 +65,14 @@ class App extends React.Component {
   }
 }
 
+
+const mapStateToProps=({user})=>({
+  currentUser: user.currentUser
+})
+
 const mapDispatchToProps=dispatch=>({
   setCurrentUser: user=>dispatch(setCurrentUser(user))
 })
 
 
-export default connect(null,mapDispatchToProps)(App);
+export default connect(mapStateToProps,mapDispatchToProps)(App);
