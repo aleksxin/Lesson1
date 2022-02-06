@@ -4,7 +4,8 @@ import { getAnalytics } from "firebase/analytics";
 import { GoogleAuthProvider }  from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getDoc, getFirestore, doc, setDoc } from "firebase/firestore";
+
 
 //import 'firebase/firestore';
 //import 'firebase/auth';
@@ -33,8 +34,29 @@ const analytics = getAnalytics(app);
 
 export const auth=getAuth();
 export const firestore = getFirestore();
-
 const provider = new GoogleAuthProvider();
+
+export const createUserProfileDocument = async (userAuth, additionalData)=>{
+    
+  if (!userAuth) return;
+const userRef = doc(firestore,'users',userAuth.uid);
+const snapShot = await getDoc(userRef);
+
+  if (!snapShot.exists()){
+    const {displayName, email}=userAuth;
+    console.log(displayName);
+    const createdAt = new Date();
+    try {
+      await setDoc(userRef,{displayName,email,createdAt,...additionalData})
+    } catch (error)
+    {
+        console.log('error creating user', error.message);
+    }
+  }
+   
+
+    return userRef;
+}
 
 //provider.setCustomParamaters({ prompt: 'select_account' });
 export const SignInWithGoogle = () => signInWithPopup(auth,provider);
