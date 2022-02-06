@@ -83,6 +83,7 @@ class SignUp extends React.Component{
                         onChange={this.handleChange}
                         label='Password'
                         required
+                        autoComplete='on'
                         />
                         <FormInput
                         type='password'
@@ -91,6 +92,7 @@ class SignUp extends React.Component{
                         onChange={this.handleChange}
                         label='Confirm APassword'
                         required
+                        autoComplete='on'
                         />
                         <CustomButton type='submit'>
                             Sign UP!!!
