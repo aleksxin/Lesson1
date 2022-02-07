@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+
 
 export const addItemToCart = (cartIms, cartItemtoAdd) => {
     const existingCartItem = cartIms.find(
