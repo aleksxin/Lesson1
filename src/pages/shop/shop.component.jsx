@@ -5,7 +5,8 @@ import CollectionPage from "../category/collection.component";
 import CollectionsOverview from "../../components/collections-overview/collections-overview.componenet";
 
 import { firestore, convertCollectionsSnapshotToMap } from "../../firebase/firebase.utils";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, getDocs, query } from "firebase/firestore";
+import { get } from "firebase/database";
 
 import { connect } from "react-redux";
 import { updateCollections } from "../../redux/shop/shop.actions";
@@ -22,15 +23,18 @@ class ShopPage extends React.Component {
 
 
     componentDidMount() {
+        
         const {updateCollections}=this.props;
-        const CollectionRef=collection(firestore,'collections');
+        const collectionRef=query(collection(firestore,'collections'));
 
-
-        this.unsubsribeFromSnapshot = onSnapshot(CollectionRef, async snapshot=> {
-            const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-            updateCollections(collectionsMap);
-            this.setState({loading: false });
-        });
+        const getDataFromFireabase = async(collectionRef,updateCollections) =>{
+        const snapshot = await getDocs(collectionRef);
+        
+        const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+        updateCollections(collectionsMap);
+        this.setState({loading: false });
+        }
+        getDataFromFireabase(collectionRef,updateCollections);
     }
 
    render (){
