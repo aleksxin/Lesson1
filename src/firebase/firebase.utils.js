@@ -4,7 +4,8 @@ import { getAnalytics } from "firebase/analytics";
 import { GoogleAuthProvider }  from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 import { getAuth } from "firebase/auth";
-import { getDoc, getFirestore, doc, setDoc } from "firebase/firestore";
+import { writeBatch, getDoc, getDocs, getFirestore, doc, setDoc, collection, docs } from "firebase/firestore";
+
 
 
 //import 'firebase/firestore';
@@ -36,6 +37,25 @@ export const auth=getAuth();
 export const firestore = getFirestore();
 const provider = new GoogleAuthProvider();
 
+export const convertCollectionsSnapshotToMap = (collectionsSnapshot) => {
+    const transformedCollection = collectionsSnapshot.docs.map(docu => {
+       const { title, items } = docu.data();
+
+       return {
+         routeName: encodeURI(title.toLowerCase()),
+         id: docu.id, title, items
+       };
+          }
+         
+    );
+    return transformedCollection.reduce((accumuator, collection) => {
+        accumuator[collection.title.toLowerCase()] = collection;
+        return accumuator;
+    },{}
+     );
+};
+
+
 export const createUserProfileDocument = async (userAuth, additionalData)=>{
     
   if (!userAuth) return;
@@ -44,7 +64,7 @@ const snapShot = await getDoc(userRef);
 
   if (!snapShot.exists()){
     const {displayName, email}=userAuth;
-    console.log(displayName);
+    //console.log(displayName);
     const createdAt = new Date();
     try {
       await setDoc(userRef,{displayName,email,createdAt,...additionalData})
@@ -56,6 +76,20 @@ const snapShot = await getDoc(userRef);
    
 
     return userRef;
+}
+
+export const addCollectionAndDocuments =  async(collectionKey, onjectsToAdd) => {
+  const collectionRef = collection(firestore,collectionKey);
+///  console.log(collectionRef);
+
+  const batch = writeBatch(firestore);
+  onjectsToAdd.forEach(element => {
+      const newDocRef = doc(collectionRef);
+      batch.set(newDocRef,element);
+    
+  });
+
+  return await batch.commit();
 }
 
 //provider.setCustomParamaters({ prompt: 'select_account' });
