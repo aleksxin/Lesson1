@@ -15,7 +15,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 hidden: !state.hidden
             };
         case CartActionTypes.ADD_ITEM:
-            return{
+            return {
                 ...state,
                 cartItems: addItemToCart(state.cartItems, action.payload)
             };
@@ -23,20 +23,24 @@ const cartReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 cartItems: state.cartItems.filter(
-                    cartItem => cartItem.id!== action.payload.id
+                    cartItem => cartItem.id !== action.payload.id
                 )
             };
         case CartActionTypes.DECREASE_ITEM:
-            return{
+            return {
                 ...state,
-                cartItems: decreaseIteFromCart(state.cartItems,action.payload)
-            };     
-
+                cartItems: decreaseIteFromCart(state.cartItems, action.payload)
+            };
+        case CartActionTypes.CLEAR_CART:
+            return {
+                ...state,
+                cartItems: []
+            };
         default:
             return state;
     }
 
-}
+};
 
 
 

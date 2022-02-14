@@ -7,7 +7,7 @@ import { selectCollection } from '../../redux/shop/shop.selector';
 
 import './collection.styles.scss';
 
-const CollectionPage = ({animate}) => {
+const CollectionPage = () => {
     const {collectionId}=useParams();
     //console.log(collectionId);
     const {title, items} = useSelector(selectCollection(collectionId));
