@@ -1,5 +1,5 @@
 
-import './App.css';
+//import './App.css';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
@@ -15,7 +15,7 @@ import { selectCurrentUser } from './redux/user/user.selectors';
 import CheckoutPage from './pages/checkout/checkout.component';
 import { checkUserSession } from './redux/user/user.actions';
 
-
+import { GlobalStyle } from './global.styles';
 
 
 const App = () => {
@@ -29,6 +29,7 @@ const App = () => {
 
   return (
     <div>
+      <GlobalStyle />
       <Header />
       <Routes>
         <Route path='/' element={<HomePage />} />
@@ -38,6 +39,7 @@ const App = () => {
 
 
       </Routes>
+
     </div>
   );
 
